@@ -11,6 +11,7 @@ import Swiper from 'swiper';
 import { VideoContent } from '../../models/video-content.interface';
 import { ImagePipe } from '../../pipes/image.pipe';
 import { DescriptionPipe } from '../../pipes/description.pipe';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-carousel',
@@ -18,11 +19,20 @@ import { DescriptionPipe } from '../../pipes/description.pipe';
   imports: [CommonModule, ImagePipe, DescriptionPipe],
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.scss',
+  animations: [
+    trigger('fade', [
+      transition('void => *', [
+        style({ opacity: 0 }),
+        animate(500, style({ opacity: 1 })),
+      ]),
+    ]),
+  ],
 })
 export class CarouselComponent implements OnInit, AfterViewInit {
   @Input() videoContents: VideoContent[] = [];
   @Input() title: string = '';
   @ViewChild('swiperContainer') swiperContainer!: ElementRef;
+  selectedMovie: string | null = null;
 
   ngAfterViewInit(): void {
     this.initSwiper();
@@ -69,5 +79,13 @@ export class CarouselComponent implements OnInit, AfterViewInit {
         },
       },
     });
+  }
+
+  setHoverMovie(movie: VideoContent) {
+    this.selectedMovie = movie.title ?? movie.name; // in case title is null
+  }
+
+  clearHoverMovie() {
+    this.selectedMovie = null;
   }
 }

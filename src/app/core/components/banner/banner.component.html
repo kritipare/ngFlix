@@ -1,15 +1,15 @@
 <iframe
-  src="https://www.youtube.com/embed/Dydmpfo68DA?autoplay=1&mute=1&loop=1&controls=0"
+  [src]="videoUrl"
   frameborder="0"
   class="w-full h-full absolute"
 ></iframe>
 <div class="h-screen bg-white">
-  <div class="pt-[15%] px-12 absolute h-full text-white bg-gradient-to-r from-black">
-    <h1 class="text-6xl">Animal</h1>
+  <div
+    class="pt-[15%] px-12 absolute h-full text-white bg-gradient-to-r from-black"
+  >
+    <h1 class="text-6xl">{{ bannerTitle }}</h1>
     <p class="inline-block py-6 w-1/4 flex-wrap">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent blandit
-      massa ut massa elementum suscipit. Integer metus odio, lacinia a facilisis
-      id, tristique eu leo. 
+      {{ bannerOverview }}
     </p>
     <div>
       <button

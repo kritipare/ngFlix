@@ -5,12 +5,13 @@ import { HeaderComponent } from '../../core/components/header/header.component';
 import { MovieService } from '../../shared/services/movie.service';
 import { CarouselComponent } from '../../shared/components/carousel/carousel.component';
 import { VideoContent } from '../../shared/models/video-content.interface';
-import { forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-browse',
   standalone: true,
-  imports: [HeaderComponent, BannerComponent, CarouselComponent],
+  imports: [HeaderComponent, BannerComponent, CarouselComponent, CommonModule],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.scss',
 })
@@ -21,6 +22,8 @@ export class BrowseComponent implements OnInit {
   name = JSON.parse(sessionStorage.getItem('loggedInUser')!).name;
   userProfileImg = JSON.parse(sessionStorage.getItem('loggedInUser')!).picture;
   email = JSON.parse(sessionStorage.getItem('loggedInUser')!).email;
+  bannerDetail$ = new Observable<any>();
+  bannerVideo$ = new Observable<any>();
 
   movies: VideoContent[] = [];
   tvShows: VideoContent[] = [];
@@ -41,25 +44,22 @@ export class BrowseComponent implements OnInit {
   ngOnInit(): void {
     forkJoin(this.sources)
       .pipe(
-        map(
-          ([
+        map(([movies, tvShows, nowPlaying, upcoming, popular, topRated]) => {
+          this.bannerDetail$ = this.movieService.getBannerDetail(
+            movies.results[0].id
+          );
+          this.bannerVideo$ = this.movieService.getBannerVideo(
+            movies.results[0].id
+          );
+          return {
             movies,
             tvShows,
             nowPlaying,
             upcoming,
             popular,
             topRated,
-          ]) => {
-            return {
-              movies,
-              tvShows,
-              nowPlaying,
-              upcoming,
-              popular,
-              topRated,
-            };
-          }
-        )
+          };
+        })
       )
       .subscribe((response: any) => {
         this.movies = response.movies.results as VideoContent[];
@@ -68,7 +68,14 @@ export class BrowseComponent implements OnInit {
         this.upcomingMovies = response.upcoming.results as VideoContent[];
         this.popularMovies = response.popular.results as VideoContent[];
         this.topRatedMovies = response.topRated.results as VideoContent[];
+        this.getMovieKey();
       });
+  }
+
+  getMovieKey() {
+    this.movieService.getBannerVideo(this.movies[0].id).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   signOut() {
