@@ -1,7 +1,18 @@
 <app-header [userImg]="userProfileImg"></app-header>
 <!-- component -->
 <app-banner> </app-banner>
+
+<app-carousel [title]="'Popular on Netflix'" [videoContents]="movies" />
+
+<app-carousel [title]="'Trending TV shows'" [videoContents]="tvShows" />
+
 <app-carousel
-  [videoContents]="popularMovies"
-  [title]="'Popular Movies'"
-></app-carousel>
+  [title]="'Now Playing Movies'"
+  [videoContents]="nowPlayingMovies"
+/>
+
+<app-carousel [title]="'Popular Movies'" [videoContents]="popularMovies" />
+
+<app-carousel [title]="'Top Rated Movies'" [videoContents]="topRatedMovies" />
+
+<app-carousel [title]="'Upcoming Movies'" [videoContents]="upcomingMovies" />

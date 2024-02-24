@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../core/components/header/header.component';
 import { MovieService } from '../../shared/services/movie.service';
 import { CarouselComponent } from '../../shared/components/carousel/carousel.component';
 import { VideoContent } from '../../shared/models/video-content.interface';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-browse',
@@ -21,12 +22,53 @@ export class BrowseComponent implements OnInit {
   userProfileImg = JSON.parse(sessionStorage.getItem('loggedInUser')!).picture;
   email = JSON.parse(sessionStorage.getItem('loggedInUser')!).email;
 
+  movies: VideoContent[] = [];
+  tvShows: VideoContent[] = [];
+  ratedMovies: VideoContent[] = [];
+  nowPlayingMovies: VideoContent[] = [];
   popularMovies: VideoContent[] = [];
+  topRatedMovies: VideoContent[] = [];
+  upcomingMovies: VideoContent[] = [];
+
+  sources = [
+    this.movieService.getMovies(),
+    this.movieService.getTvShows(),
+    this.movieService.getNowPlayingMovies(),
+    this.movieService.getUpcomingMovies(),
+    this.movieService.getPopularMovies(),
+    this.movieService.getTopRated(),
+  ];
   ngOnInit(): void {
-    this.movieService.getMovies().subscribe((response: any) => {
-      console.log(response);
-      this.popularMovies = response.results;
-    });
+    forkJoin(this.sources)
+      .pipe(
+        map(
+          ([
+            movies,
+            tvShows,
+            nowPlaying,
+            upcoming,
+            popular,
+            topRated,
+          ]) => {
+            return {
+              movies,
+              tvShows,
+              nowPlaying,
+              upcoming,
+              popular,
+              topRated,
+            };
+          }
+        )
+      )
+      .subscribe((response: any) => {
+        this.movies = response.movies.results as VideoContent[];
+        this.tvShows = response.tvShows.results as VideoContent[];
+        this.nowPlayingMovies = response.nowPlaying.results as VideoContent[];
+        this.upcomingMovies = response.upcoming.results as VideoContent[];
+        this.popularMovies = response.popular.results as VideoContent[];
+        this.topRatedMovies = response.topRated.results as VideoContent[];
+      });
   }
 
   signOut() {
