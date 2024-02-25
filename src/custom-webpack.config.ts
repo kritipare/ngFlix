@@ -1,5 +1,14 @@
-import { EnvironmentPlugin } from 'webpack';
-const Dotenv = require('dotenv-webpack');
+const { EnvironmentPlugin } = require('webpack');
+
+require('dotenv').config();
+
 module.exports = {
-  plugins: [new Dotenv({ systemvars: true })],
-};
+  output: {
+    crossOriginLoading: 'anonymous'
+  },
+  plugins: [
+    new EnvironmentPlugin([
+      'TOKEN'
+    ])
+  ]
+}

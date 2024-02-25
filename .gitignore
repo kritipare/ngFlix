@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 .env
 src/app/shared/services/config.ts
+package-lock.json
