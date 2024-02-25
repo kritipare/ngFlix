@@ -18,11 +18,13 @@
   <div class="text-white flex items-center gap-4">
     <div class="flex items-center gap-2">
       <a href=""
-        ><span>Welcome <strong>Kriti</strong></span></a
+        ><span
+          >Welcome <strong>{{ userName }}</strong></span
+        ></a
       >
-      <img width="42" [src]="userImg" alt="user-image" class="rounded"/>
+      <img width="42" [src]="userImg" alt="user-image" class="rounded" />
     </div>
     &nbsp; | &nbsp;
-    <button class="">Sign Out</button>
+    <button (click)="auth.signOut()">Sign Out</button>
   </div>
 </header>
