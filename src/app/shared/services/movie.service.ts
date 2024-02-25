@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TOKEN } from './config';
 
 const options = {
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer ${process.env['TOKEN']}`,
+    Authorization: `Bearer ${TOKEN}`,
   },
 };
 
