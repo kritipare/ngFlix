@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 const options = {
   headers: {
     accept: 'application/json',
-    Authorization: 'Bearer ',
+    Authorization: `Bearer ${process.env['TOKEN']}`,
   },
 };
 
