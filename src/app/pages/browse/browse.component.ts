@@ -73,9 +73,7 @@ export class BrowseComponent implements OnInit {
   }
 
   getMovieKey() {
-    this.movieService.getBannerVideo(this.movies[0].id).subscribe((res) => {
-      console.log(res);
-    });
+    this.movieService.getBannerVideo(this.movies[0].id).subscribe((res) => {});
   }
 
   signOut() {
