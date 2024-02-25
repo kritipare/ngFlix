@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgZone } from '@angular/core';
 
 declare var google: any;
 
@@ -12,6 +13,7 @@ declare var google: any;
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router);
+  ngZone = inject(NgZone);
 
   ngOnInit(): void {
     google.accounts.id.initialize({
@@ -40,7 +42,9 @@ export class LoginComponent implements OnInit {
       //store it in session
       sessionStorage.setItem('loggedInUser', JSON.stringify(payload));
       // navigate to home/browse page
-      this.router.navigate(['browse']);
+      this.ngZone.run(() => {
+        this.router.navigate(['browse']);
+      });
     }
   }
 }
